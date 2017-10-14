@@ -28,6 +28,18 @@ def setup():
     INPUT.insert_rule(limitRule)
 
     # iptables --append INPUT -s 127.0.0.1 --jump ACCEPT
+    host3 = iptc.Rule()
+    host3.src = '10.0.0.8'
+    host3.target = iptc.Target(host3, 'ACCEPT')
+    INPUT.insert_rule(host3)
+
+    # iptables --append INPUT -s 127.0.0.1 --jump ACCEPT
+    host4 = iptc.Rule()
+    host4.src = '10.0.0.9'
+    host4.target = iptc.Target(host4, 'ACCEPT')
+    INPUT.insert_rule(host4)
+
+    # iptables --append INPUT -s 127.0.0.1 --jump ACCEPT
     loRule = iptc.Rule()
     loRule.src = '127.0.0.1'
     loRule.target = iptc.Target(loRule, 'ACCEPT')
@@ -40,6 +52,7 @@ def setup():
     INPUT.insert_rule(jumpRule)
 
 def teardown():
+    INPUT = iptc.Chain(iptc.Table(iptc.Table.FILTER), 'INPUT')
     INPUT.flush()
 
 def readLog():
