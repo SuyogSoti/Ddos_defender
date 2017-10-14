@@ -4,6 +4,8 @@ ctx.canvas.height = window.innerHeight;
 
 var timeLabels = []
 var requestData = []
+var droppedData = []
+var commonlyBlocked = {}
 
 //This stuff was used to generate random data. No longer needed.
 /*

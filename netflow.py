@@ -97,7 +97,7 @@ def processLogs(log):
 
     return sources
 
-def save(times, requestData):
+def save(times, requestData, droppedData, blocked):
     with open('vis.js') as inFile:
         data = inFile.read().split('\n')
         print('In: %s' % data)
@@ -105,7 +105,10 @@ def save(times, requestData):
     with open('vis.js', 'w') as outFile:
         time = 'var timeLabels = [%s]' % ','.join(times)
         requests = 'var requestData = [%s]' % ','.join(requestData)
-        out = '\n'.join(data[:4] + [time, requests] + data[6:])
+        dropped = 'var droppedData = [%s]' % ','.join(droppedData)
+        blocked = 'var commonlyBlocked = {}'
+
+        out = '\n'.join(data[:4] + [time, requests, dropped, blocked] + data[8:])
         print('Out: %s' % out)
         outFile.write(out)
 
@@ -114,6 +117,7 @@ def main():
     setup()
     times = []
     requestData = []
+    droppedData = []
     for i in itertools.count():
         try:
             sleep(1)
@@ -122,13 +126,8 @@ def main():
 
             times.append(str(i))
             requestData.append(str(aPackets))
-            print (times)
-            print (requestData)
-            save(times, requestData)
-            # if aPackets or dPackets or sources:
-            #     print('Accepted packets: %d' % aPackets)
-            #     print('Dropped packets: %d' % dPackets)
-            #     print('Sources: %s' % sources)
+            droppedData.append(str(dPackets))
+            save(times, requestData, droppedData, sources)
         except KeyboardInterrupt:
             break
     teardown()
