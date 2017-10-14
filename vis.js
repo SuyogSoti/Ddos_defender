@@ -7,6 +7,7 @@ var requestData = []
 
 //This stuff was used to generate random data. No longer needed.
 /*
+
 for (i = 0; i < 100; i++)
 {
 	var newstr = "10:22:" + i;
@@ -25,8 +26,8 @@ for (y = 0; y < 100; y++)
 		requestData.push(q);
 	}
 }
-*/
 
+*/
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
