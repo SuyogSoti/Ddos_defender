@@ -6,7 +6,7 @@ import re
 from time import sleep
 
 def setup():
-    INPUT = iptc.Chain(iptc.Table(iptc.Table.FILTER), "INPUT")
+    INPUT = iptc.Chain(iptc.Table(iptc.Table.FILTER), 'INPUT')
     INPUT.flush()
 
     # iptables --append INPUT --jump DROP
@@ -29,13 +29,13 @@ def setup():
 
     # iptables --append INPUT -s 127.0.0.1 --jump ACCEPT
     loRule = iptc.Rule()
-    loRule.src = "127.0.0.1"
+    loRule.src = '127.0.0.1'
     loRule.target = iptc.Target(loRule, 'ACCEPT')
     INPUT.insert_rule(loRule)
 
     # iptables --append INPUT -s 10.0.0.5 --jump ACCEPT
     jumpRule = iptc.Rule()
-    jumpRule.src = "10.0.0.5"
+    jumpRule.src = '10.0.0.5'
     jumpRule.target = iptc.Target(jumpRule, 'ACCEPT')
     INPUT.insert_rule(jumpRule)
 
@@ -43,8 +43,8 @@ def teardown():
     INPUT.flush()
 
 def readLog():
-    dmesg = subprocess.check_output(["dmesg"])
-    subprocess.check_output(["dmesg", "--clear"])
+    dmesg = subprocess.check_output(['dmesg'])
+    subprocess.check_output(['dmesg', '--clear'])
     return dmesg
 
 def getCounts():
@@ -52,7 +52,7 @@ def getCounts():
     dPackets = 0
     table = iptc.Table(iptc.Table.FILTER)
     table.refresh()
-    INPUT = iptc.Chain(table, "INPUT")
+    INPUT = iptc.Chain(table, 'INPUT')
     for rule in INPUT.rules:
         if rule.target.name == 'ACCEPT':
             packets, _ = rule.get_counters()
@@ -61,6 +61,12 @@ def getCounts():
         if rule.target.name == 'DROP':
             packets, _ = rule.get_counters()
             dPackets += packets
+
+    # clear counts
+    try:
+        subprocess.check_output(['iptables', '-Z'])
+    except Exception:
+        pass
 
     return aPackets, dPackets
 
