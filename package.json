@@ -1,0 +1,23 @@
+{
+  "name": "ddos_defender",
+  "version": "1.0.0",
+  "description": "Defends against ddos attacks",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuyogSoti/Ddos_defender.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SuyogSoti/Ddos_defender/issues"
+  },
+  "homepage": "https://github.com/SuyogSoti/Ddos_defender#readme"
+}
