@@ -3,6 +3,7 @@
 import iptc
 import subprocess
 import re
+import itertools
 from time import sleep
 
 def setup():
@@ -96,19 +97,38 @@ def processLogs(log):
 
     return sources
 
+def save(times, requestData):
+    with open('vis.js') as inFile:
+        data = inFile.read().split('\n')
+        print('In: %s' % data)
+
+    with open('vis.js', 'w') as outFile:
+        time = 'var timeLabels = [%s]' % ','.join(times)
+        requests = 'var requestData = [%s]' % ','.join(requestData)
+        out = '\n'.join(data[:4] + [time, requests] + data[6:])
+        print('Out: %s' % out)
+        outFile.write(out)
+
 def main():
     readLog()
     setup()
-    while True:
+    times = []
+    requestData = []
+    for i in itertools.count():
         try:
             sleep(1)
             sources = processLogs(readLog())
             aPackets, dPackets = getCounts()
 
-            if aPackets or dPackets or sources:
-                print('Accepted packets: %d' % aPackets)
-                print('Dropped packets: %d' % dPackets)
-                print('Sources: %s' % sources)
+            times.append(str(i))
+            requestData.append(str(aPackets))
+            print (times)
+            print (requestData)
+            save(times, requestData)
+            # if aPackets or dPackets or sources:
+            #     print('Accepted packets: %d' % aPackets)
+            #     print('Dropped packets: %d' % dPackets)
+            #     print('Sources: %s' % sources)
         except KeyboardInterrupt:
             break
     teardown()
