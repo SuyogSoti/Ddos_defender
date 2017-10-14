@@ -39,7 +39,14 @@ var myChart = new Chart(ctx, {
             borderColor: 'rgba(153, 153, 102, 0.5)',
             pointBackgroundColor: 'rgba(153, 153, 102, 0.75)',
             label: "Requests over Time"
-        }],
+        },
+        {
+            data: droppedData,
+            fill:false,
+            borderColor: 'rgba(255, 0, 0, 1)',
+            label: "Dropped Packets"
+        }
+        ],
         labels: timeLabels
     },
     options: {
