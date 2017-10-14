@@ -22,7 +22,7 @@ def setup():
     limitRule = iptc.Rule()
     limitRule.target = iptc.Target(limitRule, 'ACCEPT')
     match = iptc.Match(limitRule, 'limit')
-    match.limit = '50/sec'
+    match.limit = '20/sec'
     limitRule.add_match(match)
     INPUT.insert_rule(limitRule)
 
