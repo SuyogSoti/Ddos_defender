@@ -24,7 +24,7 @@ def setup():
     limitRule = iptc.Rule()
     limitRule.target = iptc.Target(limitRule, 'ACCEPT')
     match = iptc.Match(limitRule, 'limit')
-    match.limit = '20/sec'
+    match.limit = '2/sec'
     limitRule.add_match(match)
     INPUT.insert_rule(limitRule)
 
@@ -100,16 +100,14 @@ def processLogs(log):
 def save(times, requestData, droppedData, blocked):
     with open('vis.js') as inFile:
         data = inFile.read().split('\n')
-        print('In: %s' % data)
 
     with open('vis.js', 'w') as outFile:
         time = 'var timeLabels = [%s]' % ','.join(times)
         requests = 'var requestData = [%s]' % ','.join(requestData)
         dropped = 'var droppedData = [%s]' % ','.join(droppedData)
-        blocked = 'var commonlyBlocked = {}'
+        blocked = 'var commonlyBlocked = {%s}' % ','.join(['"%s": %s' % (k, v) for k, v in blocked.items()])
 
         out = '\n'.join(data[:4] + [time, requests, dropped, blocked] + data[8:])
-        print('Out: %s' % out)
         outFile.write(out)
 
 def main():
@@ -118,16 +116,19 @@ def main():
     times = []
     requestData = []
     droppedData = []
+    blocked = {}
     for i in itertools.count():
         try:
             sleep(1)
             sources = processLogs(readLog())
+            for source, count in sources.items():
+                blocked[source] = blocked.get(source, 0) + count
             aPackets, dPackets = getCounts()
 
             times.append(str(i))
             requestData.append(str(aPackets))
             droppedData.append(str(dPackets))
-            save(times, requestData, droppedData, sources)
+            save(times, requestData, droppedData, blocked)
         except KeyboardInterrupt:
             break
     teardown()
