@@ -72,3 +72,15 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+
+var blockTable = document.getElementById("blockTable");
+for (ip in commonlyBlocked)
+{
+   blockTable.insertRow(0);
+   var ipCell = row.insertCell(0);
+   var countCell = row.insertCell(1);
+
+   ipCell.innerHTML = ip;
+   countCell.innerHTML = commonlyBlocked[ip];
+}
+
